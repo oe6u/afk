@@ -53,8 +53,16 @@ client.on('ready', async () => {
     await joinVoice();
 });
 
-client.login(TOKEN).catch(err => {
-    console.error('❌ Login failed:', err);
+// تنظيف التوكن من أي مسافات أو علامات اقتباس زائدة قد تأتي من Render
+const cleanToken = TOKEN ? TOKEN.trim().replace(/['"]/g, '') : null;
+
+if (!cleanToken) {
+    console.error('❌ No TOKEN provided in Environment Variables!');
+    process.exit(1);
+}
+
+client.login(cleanToken).catch(err => {
+    console.error('❌ Login failed. Detailed Error:', err);
 });
 
 process.on('unhandledRejection', error => {
