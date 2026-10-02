@@ -1,5 +1,19 @@
 const { Client } = require('discord.js-selfbot-v13');
+const express = require('express');
 require('dotenv').config();
+
+// --- إنشاء سيرفر وهمي لـ Render ---
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Bot is online and AFK! 🚀');
+});
+
+app.listen(port, () => {
+    console.log(`🌐 Web server is running on port ${port}`);
+});
+// ---------------------------------
 
 const client = new Client({
     checkUpdate: false
@@ -20,20 +34,12 @@ async function joinVoice() {
         }
 
         console.log(`Attempting to join ${channel.name}...`);
-        
-        // الانضمام للروم
         await client.voice.joinChannel(channel);
         console.log(`✅ Successfully joined ${channel.name}.`);
 
-        // --- الطريقة الصحيحة لتفعيل الـ Deafen و Mute في selfbot-v13 ---
-        // نستخدم client.voice.setSelfDeaf والـ Mute
-        try {
-            await client.voice.setSelfDeaf(true);
-            await client.voice.setSelfMute(true);
-            console.log(`🎧 Deafen and Mute activated. Now staying AFK...`);
-        } catch (deafError) {
-            console.error('⚠️ Could not set Deafen/Mute, but joined the channel.');
-        }
+        await client.voice.setSelfDeaf(true);
+        await client.voice.setSelfMute(true);
+        console.log(`🎧 Deafen and Mute activated. Now staying AFK...`);
 
     } catch (error) {
         console.error('❌ Voice Connection Error:', error.message);
