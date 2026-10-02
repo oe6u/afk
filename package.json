@@ -1,11 +1,11 @@
 {
-  "name": "afk-selfbot",
+  "name": "afk-selfbot-railway",
   "version": "1.0.0",
+  "description": "Stay AFK and Deafened in Voice Channel 24/7",
   "main": "index.js",
   "dependencies": {
     "discord.js-selfbot-v13": "3.7.1",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2"
+    "dotenv": "^16.3.1"
   },
   "scripts": {
     "start": "node index.js"
