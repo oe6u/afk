@@ -2,10 +2,9 @@ const { Client } = require('discord.js-selfbot-v13');
 require('dotenv').config();
 
 const client = new Client({
-    checkpartials: true
+    checkUpdate: false // إغلاق تنبيهات التحديث لمنع الأخطاء في الـ Logs
 });
 
-// جلب البيانات من متغيرات Railway
 const TOKEN = process.env.USER_TOKEN;
 const GUILD_ID = process.env.GUILD_ID;
 const VOICE_CHANNEL_ID = process.env.VOICE_CHANNEL_ID;
@@ -22,21 +21,28 @@ client.on('ready', async () => {
             process.exit(1);
         }
 
-        // الانضمام للروم الصوتية والبقاء فيها
+        // الانضمام للروم الصوتية
         await client.voice.joinChannel(channel);
-        
-        console.log(`✅ Successfully joined ${channel.name}. Now staying AFK...`);
+        console.log(`✅ Joined ${channel.name}.`);
+
+        // تفعيل وضع الـ DEAFEN (كتم السماعات)
+        // هذا يجعل الحساب يظهر كـ Deafen في الروم
+        await client.user.setVoiceStatus(channel.id, {
+            self_deaf: true, 
+            self_mute: true 
+        });
+
+        console.log(`🎧 Deafen and Mute activated. Now staying AFK...`);
     } catch (error) {
-        console.error('❌ Error joining voice channel:', error);
+        console.error('❌ Error during AFK process:', error);
     }
 });
 
-// محاولة تسجيل الدخول
 client.login(TOKEN).catch(err => {
-    console.error('❌ Invalid Token or Connection Error:', err);
+    console.error('❌ Login failed. Check your TOKEN:', err);
 });
 
-// نظام بسيط لمنع الـ Crash وإعادة المحاولة في حال انقطع الاتصال
+// منع الـ Crash
 process.on('unhandledRejection', error => {
     console.error('Unhandled promise rejection:', error);
 });
