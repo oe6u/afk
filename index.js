@@ -21,22 +21,23 @@ async function joinVoice() {
 
         console.log(`Attempting to join ${channel.name}...`);
         
-        // استخدام joinChannel مع التعامل مع الـ Timeout
+        // الانضمام للروم
         await client.voice.joinChannel(channel);
         console.log(`✅ Successfully joined ${channel.name}.`);
 
-        // تفعيل الـ Deafen و Mute
-        await client.user.setVoiceStatus(channel.id, {
-            self_deaf: true, 
-            self_mute: true 
-        });
-        console.log(`🎧 Deafen and Mute activated. Now staying AFK...`);
+        // --- الطريقة الصحيحة لتفعيل الـ Deafen و Mute في selfbot-v13 ---
+        // نستخدم client.voice.setSelfDeaf والـ Mute
+        try {
+            await client.voice.setSelfDeaf(true);
+            await client.voice.setSelfMute(true);
+            console.log(`🎧 Deafen and Mute activated. Now staying AFK...`);
+        } catch (deafError) {
+            console.error('⚠️ Could not set Deafen/Mute, but joined the channel.');
+        }
 
     } catch (error) {
         console.error('❌ Voice Connection Error:', error.message);
         console.log('🔄 Retrying in 30 seconds...');
-        
-        // محاولة إعادة الاتصال بعد 30 ثانية في حال حدوث Timeout
         setTimeout(joinVoice, 30000);
     }
 }
